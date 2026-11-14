@@ -164,6 +164,9 @@ endforeach()
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
+add_executable(trowel_bench EXCLUDE_FROM_ALL tools/bench.cpp)
+trowel_common(trowel_bench)
+
 add_executable(trowel_dsp_test test/test_dsp.cpp)
 trowel_common(trowel_dsp_test)
 add_test(NAME trowel_dsp COMMAND trowel_dsp_test)

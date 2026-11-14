@@ -259,6 +259,10 @@ cmake --build build --target trowel_ui_preview trowel_master_ui_preview
 - **Output protection.** A soft clipper with a +0.2 dBFS ceiling is linear below
   −0.9 dBFS and saturates gently above it, so normal programme material is
   untouched. Bypass stays clean.
+- **CPU.** On the development machine, 20 seconds of stereo audio at 48 kHz
+  with Tame at 60% costs about 0.6–0.9 s (3–4% of one core); at 192 kHz it
+  is about 12–16%. The spectral engine is not more expensive than the
+  dynamic one at typical settings.
 - **Denormal protection.** Filter and detector state is flushed below 1e-20.
 
 ## Testing
