@@ -1,6 +1,6 @@
 # Trowel
 
-**Version 0.2.0** · GPL-3.0-or-later
+**Version 0.2.1** · GPL-3.0-or-later
 
 **Trowel** is a free, open-source EQ suite for Linux in two builds:
 

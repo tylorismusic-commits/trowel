@@ -1640,7 +1640,7 @@ static void drawHeader(cairo_t* cr, const State& s) {
 
   textAt(cr, 874.0, 38.0, "COLOUR · CONSOLE · TAME", 7.5, true, kMuted);
   textAt(cr, 874.0, 52.0, "6 SIGNAL ROUTINGS", 6.5, false, kMuted);
-  textAt(cr, 874.0, 66.0, "v0.2.0", 6.5, false, kMuted);
+  textAt(cr, 874.0, 66.0, "v0.2.1", 6.5, false, kMuted);
 
   // brushed-metal strip along the bottom of the header
   cairo_pattern_t* strip = cairo_pattern_create_linear(0, 76, 0, 80);

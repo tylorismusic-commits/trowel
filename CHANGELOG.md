@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Preserve per-plugin skin overrides in `~/.config/hearth/skins.conf` when
+  changing the suite default from the header.
+
 ## 0.2.0
 
 - Added the suite-wide skin system to both Trowel and Trowel Master. The free

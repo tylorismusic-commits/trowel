@@ -477,12 +477,33 @@ class Manager {
     if (path.empty()) return;
     const size_t slash = path.find_last_of('/');
     if (slash != std::string::npos) ensureDir(path.substr(0, slash));
+
+    std::vector<std::string> lines;
+    bool wroteDefault = false;
+    std::ifstream input(path);
+    std::string line;
+    while (std::getline(input, line)) {
+      const std::string trimmed = trim(line);
+      if (trimmed.rfind("default=", 0) == 0 || trimmed.rfind("skin=", 0) == 0) {
+        lines.push_back("default=" + id);
+        wroteDefault = true;
+      } else {
+        lines.push_back(line);
+      }
+    }
+    if (!wroteDefault) {
+      lines.push_back("default=" + id);
+    }
+
     const std::string temp = path + ".tmp";
     {
       std::ofstream output(temp, std::ios::trunc);
       if (!output) return;
       output << "# Hearth suite skin\n";
-      output << "default=" << id << "\n";
+      for (const std::string& entry : lines) {
+        if (trim(entry).empty()) continue;
+        output << entry << "\n";
+      }
     }
     std::rename(temp.c_str(), path.c_str());
   }
