@@ -1,6 +1,6 @@
 # Trowel
 
-**Version 0.1.0** · GPL-3.0-or-later
+**Version 0.2.0** · GPL-3.0-or-later
 
 **Trowel** is a free, open-source EQ suite for Linux in two builds:
 
@@ -223,6 +223,14 @@ cmake --build build --target trowel_ui_preview trowel_master_ui_preview
 ./build/trowel_ui_preview trowel-ui.png
 ./build/trowel_master_ui_preview trowel-master-ui.png
 ```
+
+## Skins
+
+The swatch or `SKIN` chip in the plugin header cycles the suite skin. The free
+Classic theme is built in. Additional skins can be installed in
+`~/.local/share/hearth/skins/<skin>/` with a `palette.ini`; the selection is
+shared across the Hearth suite and stored in `~/.config/hearth/skins.conf`.
+Skins change only the UI colors and artwork, never the audio or project state.
 
 ## Using it
 

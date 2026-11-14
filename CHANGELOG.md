@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+- Added the suite-wide skin system to both Trowel and Trowel Master. The free
+  Classic theme remains the default, and the header skin chip cycles through
+  any installed skins.
+- Skin selection is user-level, shared across the suite, and persists in
+  `~/.config/hearth/skins.conf`. It never changes audio, presets, latency, or
+  project state.
+- Added the loader for Catppuccin Mocha, Studio 4000, Tokyo Night, and
+  user-created skins, including themed response-scope colors.
+
 ## 0.1.0
 
 - Initial release of **Trowel** and **Trowel Master**, two stereo LV2/CLAP EQ

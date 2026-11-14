@@ -39,7 +39,7 @@ static constexpr const char* kPluginId = "com.tylorismusic.trowel-master";
 static constexpr const char* kPluginName = "Trowel Master";
 static constexpr const char* kUiUri =
     "https://github.com/tylorismusic-commits/trowel-master#ui";
-static constexpr const char* kVersion = "0.1.0";
+static constexpr const char* kVersion = "0.2.0";
 static constexpr const char* kDescription =
     "Mastering EQ suite: Pultec-style colour, 4000E console EQ and a "
     "4096-point spectral resonance suppressor.";
@@ -50,7 +50,7 @@ static constexpr const char* kPluginId = "com.tylorismusic.trowel";
 static constexpr const char* kPluginName = "Trowel";
 static constexpr const char* kUiUri =
     "https://github.com/tylorismusic-commits/trowel#ui";
-static constexpr const char* kVersion = "0.1.0";
+static constexpr const char* kVersion = "0.2.0";
 static constexpr const char* kDescription =
     "Zero-latency EQ suite: Pultec-style colour, 4000E console EQ and an "
     "adaptive resonance suppressor.";
