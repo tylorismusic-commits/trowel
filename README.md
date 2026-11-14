@@ -264,7 +264,8 @@ cmake --build build --target trowel_ui_preview trowel_master_ui_preview
 ## Testing
 
 - `test_dsp.cpp` — latency, bypass transparency, Pultec boost/cut interaction,
-  SSL shelves, dynamic Tame transparency and reduction, spectral latency.
+  SSL shelves, dynamic and spectral Tame transparency and reduction, and
+  spectral latency.
 - `host_test.cpp` — loads both LV2 bundles with lilv, checks port counts, UIs,
   presets, reported latency, flat-chain unity, bypass and inline display.
 - `ui_host_test.cpp` — embeds each X11 UI under Xvfb, delivers meters/telemetry,

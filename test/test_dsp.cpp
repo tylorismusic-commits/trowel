@@ -221,6 +221,42 @@ static void testDynamicReduction() {
   check(tame.lastMaxReductionDb() > 0.5f, "dynamic tame reduces a narrow tone");
 }
 
+static void testSpectralReduction() {
+  TameSpectral tame;
+  tame.prepare(48000.0f);
+  TameParams p;
+  p.amount = 1.0f;
+  p.focus = 0.7f;
+  p.selectivity = 0.6f;
+  p.sensitivity = 0.7f;
+  p.attackMs = 10.0f;
+  p.releaseMs = 250.0f;
+  p.mix = 1.0f;
+  tame.setTargets(p);
+  tame.reset();
+
+  const uint32_t total = 96000;
+  std::vector<float> l(total), r(total);
+  for (uint32_t i = 0; i < total; ++i) {
+    l[i] = 0.1f * std::sin(2.0f * kPi * 3000.0f * i / 48000.0f);
+    r[i] = l[i];
+  }
+  tame.process(l.data(), r.data(), total);
+
+  double sum = 0.0;
+  const uint32_t tail = 24000;
+  for (uint32_t i = total - tail; i < total; ++i) {
+    sum += l[i] * l[i];
+  }
+  const double rms = std::sqrt(sum / tail);
+  const double inputRms = 0.1 / std::sqrt(2.0);
+  const double reductionDb = 20.0 * std::log10(rms / inputRms);
+  std::printf("spectral tame reduction %.2f dB, lastMax %.2f dB\n",
+              reductionDb, tame.lastMaxReductionDb());
+  check(std::isfinite(rms), "spectral tame output is finite");
+  check(reductionDb < -1.0, "spectral tame reduces a narrow tone");
+}
+
 static void testSpectralLatency() {
   TameSpectral tame;
   tame.prepare(48000.0f);
@@ -267,6 +303,7 @@ int main() {
   testSsl();
   testDynamicIdle();
   testDynamicReduction();
+  testSpectralReduction();
   testSpectralLatency();
 
   std::printf("\n%s (%d failure%s)\n", gFailures == 0 ? "PASS" : "FAIL",
