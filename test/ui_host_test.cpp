@@ -78,11 +78,15 @@ int main(int argc, char** argv) {
 
   std::string uiPath = uiPathArg;
   std::string bundleDir = uiPath.substr(0, uiPath.find_last_of('/') + 1);
+  const char* pluginUri =
+      uiPath.find("trowel-master") != std::string::npos
+          ? "https://github.com/tylorismusic-commits/trowel-master"
+          : "https://github.com/tylorismusic-commits/trowel";
 
   LV2UI_Widget widget = nullptr;
   LV2UI_Handle handle = descriptor->instantiate(
-      descriptor, "https://github.com/tylorismusic-commits/trowel",
-      bundleDir.c_str(), &writeFn, nullptr, &widget, features);
+      descriptor, pluginUri, bundleDir.c_str(), &writeFn, nullptr, &widget,
+      features);
   if (!handle) {
     std::printf("FAIL: instantiate\n");
     return 1;

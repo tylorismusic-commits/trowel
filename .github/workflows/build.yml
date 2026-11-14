@@ -3,14 +3,19 @@ name: build
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -18,9 +23,47 @@ jobs:
             build-essential cmake pkg-config \
             lv2-dev libcairo2-dev libx11-dev libfreetype6-dev \
             liblilv-dev libxtst-dev xvfb
+
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
       - name: Build
         run: cmake --build build -j2
+
       - name: Test
         run: ctest --test-dir build --output-on-failure
+
+      - name: Package
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then
+            version="$(sed -n 's/^project(trowel VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)"
+          fi
+          mkdir -p dist
+          tar -czf "dist/trowel-${version}-lv2.tar.gz" \
+            -C build/lv2 trowel.lv2 trowel-master.lv2
+          tar -czf "dist/trowel-${version}-clap.tar.gz" \
+            -C build/clap Trowel.clap Trowel.resources \
+            TrowelMaster.clap TrowelMaster.resources
+          git archive --format=tar.gz \
+            --prefix="trowel-${version}/" \
+            -o "dist/trowel-${version}-source.tar.gz" HEAD
+          (cd dist && sha256sum ./* > SHA256SUMS)
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trowel-${{ github.ref_name }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${GITHUB_REF_NAME}" dist/* \
+            --title "Trowel ${GITHUB_REF_NAME}" \
+            --notes-file CHANGELOG.md
