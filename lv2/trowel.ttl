@@ -1,0 +1,1359 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix pg:   <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
+
+@prefix trowel: <https://github.com/tylorismusic-commits/trowel> .
+
+<https://github.com/tylorismusic-commits/trowel>
+	a lv2:Plugin , lv2:EQPlugin ;
+	lv2:binary <trowel.so> ;
+	lv2:majorVersion 0 ;
+	lv2:minorVersion 1 ;
+	lv2:microVersion 0 ;
+	lv2:project <https://github.com/tylorismusic-commits/trowel> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	doap:license <https://spdx.org/licenses/GPL-3.0-or-later.html> ;
+	doap:name "Trowel" ;
+	doap:description "Zero-latency EQ suite: Pultec-style colour, 4000E console EQ and an adaptive resonance suppressor." ;
+	doap:shortdesc "Zero-latency EQ suite: Pultec-style colour, 4000E console EQ and an adaptive resonance suppressor." ;
+	foaf:homepage <https://github.com/tylorismusic-commits/trowel> ;
+	ui:ui <https://github.com/tylorismusic-commits/trowel#ui> ;
+	lv2:port [
+		a lv2:AudioPort , lv2:InputPort ;
+		lv2:index 0 ;
+		lv2:symbol "in_l" ;
+		lv2:name "Input Left" ;
+		lv2:group <trowel#input> ;
+		lv2:designation pg:left ;
+		] ;
+	lv2:port [
+		a lv2:AudioPort , lv2:InputPort ;
+		lv2:index 1 ;
+		lv2:symbol "in_r" ;
+		lv2:name "Input Right" ;
+		lv2:group <trowel#input> ;
+		lv2:designation pg:right ;
+		] ;
+	lv2:port [
+		a lv2:AudioPort , lv2:OutputPort ;
+		lv2:index 2 ;
+		lv2:symbol "out_l" ;
+		lv2:name "Output Left" ;
+		lv2:group <trowel#output> ;
+		lv2:designation pg:left ;
+		] ;
+	lv2:port [
+		a lv2:AudioPort , lv2:OutputPort ;
+		lv2:index 3 ;
+		lv2:symbol "out_r" ;
+		lv2:name "Output Right" ;
+		lv2:group <trowel#output> ;
+		lv2:designation pg:right ;
+		] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 4 ;
+			lv2:symbol "pultec_on" ;
+			lv2:name "Colour" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 1 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 5 ;
+			lv2:symbol "pul_low_freq" ;
+			lv2:name "Low Freq" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 60 ;
+			lv2:minimum 20 ;
+			lv2:maximum 100 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "20" ; rdf:value 20 ] ;
+			lv2:scalePoint [ rdfs:label "30" ; rdf:value 30 ] ;
+			lv2:scalePoint [ rdfs:label "60" ; rdf:value 60 ] ;
+			lv2:scalePoint [ rdfs:label "100" ; rdf:value 100 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 6 ;
+			lv2:symbol "pul_low_boost" ;
+			lv2:name "Low Boost" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 13.5 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 7 ;
+			lv2:symbol "pul_low_cut" ;
+			lv2:name "Low Cut" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 0 ;
+			lv2:minimum -17.5 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 8 ;
+			lv2:symbol "pul_high_freq" ;
+			lv2:name "High Freq" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 10000 ;
+			lv2:minimum 3000 ;
+			lv2:maximum 16000 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "3k" ; rdf:value 3000 ] ;
+			lv2:scalePoint [ rdfs:label "4k" ; rdf:value 4000 ] ;
+			lv2:scalePoint [ rdfs:label "5k" ; rdf:value 5000 ] ;
+			lv2:scalePoint [ rdfs:label "8k" ; rdf:value 8000 ] ;
+			lv2:scalePoint [ rdfs:label "10k" ; rdf:value 10000 ] ;
+			lv2:scalePoint [ rdfs:label "12k" ; rdf:value 12000 ] ;
+			lv2:scalePoint [ rdfs:label "16k" ; rdf:value 16000 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 9 ;
+			lv2:symbol "pul_high_boost" ;
+			lv2:name "High Boost" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 18 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 10 ;
+			lv2:symbol "pul_bandwidth" ;
+			lv2:name "Bandwidth" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 5 ;
+			lv2:minimum 0 ;
+			lv2:maximum 10 ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 11 ;
+			lv2:symbol "pul_high_cut_freq" ;
+			lv2:name "High Cut Freq" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 10000 ;
+			lv2:minimum 5000 ;
+			lv2:maximum 20000 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "5k" ; rdf:value 5000 ] ;
+			lv2:scalePoint [ rdfs:label "10k" ; rdf:value 10000 ] ;
+			lv2:scalePoint [ rdfs:label "20k" ; rdf:value 20000 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 12 ;
+			lv2:symbol "pul_high_cut" ;
+			lv2:name "High Cut" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 0 ;
+			lv2:minimum -16 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 13 ;
+			lv2:symbol "pul_iron" ;
+			lv2:name "Iron" ;
+			lv2:group <trowel#colour> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 14 ;
+			lv2:symbol "ssl_on" ;
+			lv2:name "Console" ;
+			lv2:group <trowel#console> ;
+			lv2:default 1 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 15 ;
+			lv2:symbol "ssl_lf_freq" ;
+			lv2:name "LF Freq" ;
+			lv2:group <trowel#console> ;
+			lv2:default 60 ;
+			lv2:minimum 30 ;
+			lv2:maximum 150 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "30" ; rdf:value 30 ] ;
+			lv2:scalePoint [ rdfs:label "40" ; rdf:value 40 ] ;
+			lv2:scalePoint [ rdfs:label "60" ; rdf:value 60 ] ;
+			lv2:scalePoint [ rdfs:label "75" ; rdf:value 75 ] ;
+			lv2:scalePoint [ rdfs:label "90" ; rdf:value 90 ] ;
+			lv2:scalePoint [ rdfs:label "110" ; rdf:value 110 ] ;
+			lv2:scalePoint [ rdfs:label "130" ; rdf:value 130 ] ;
+			lv2:scalePoint [ rdfs:label "150" ; rdf:value 150 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 16 ;
+			lv2:symbol "ssl_lf_gain" ;
+			lv2:name "LF Gain" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum -15 ;
+			lv2:maximum 15 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 17 ;
+			lv2:symbol "ssl_lf_bell" ;
+			lv2:name "LF Shape" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 18 ;
+			lv2:symbol "ssl_lmf_freq" ;
+			lv2:name "LMF Freq" ;
+			lv2:group <trowel#console> ;
+			lv2:default 300 ;
+			lv2:minimum 100 ;
+			lv2:maximum 2000 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "100" ; rdf:value 100 ] ;
+			lv2:scalePoint [ rdfs:label "150" ; rdf:value 150 ] ;
+			lv2:scalePoint [ rdfs:label "200" ; rdf:value 200 ] ;
+			lv2:scalePoint [ rdfs:label "300" ; rdf:value 300 ] ;
+			lv2:scalePoint [ rdfs:label "400" ; rdf:value 400 ] ;
+			lv2:scalePoint [ rdfs:label "600" ; rdf:value 600 ] ;
+			lv2:scalePoint [ rdfs:label "800" ; rdf:value 800 ] ;
+			lv2:scalePoint [ rdfs:label "1k" ; rdf:value 1000 ] ;
+			lv2:scalePoint [ rdfs:label "1.5k" ; rdf:value 1500 ] ;
+			lv2:scalePoint [ rdfs:label "2k" ; rdf:value 2000 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 19 ;
+			lv2:symbol "ssl_lmf_gain" ;
+			lv2:name "LMF Gain" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum -15 ;
+			lv2:maximum 15 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 20 ;
+			lv2:symbol "ssl_hmf_freq" ;
+			lv2:name "HMF Freq" ;
+			lv2:group <trowel#console> ;
+			lv2:default 3000 ;
+			lv2:minimum 1500 ;
+			lv2:maximum 10000 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "1.5k" ; rdf:value 1500 ] ;
+			lv2:scalePoint [ rdfs:label "2k" ; rdf:value 2000 ] ;
+			lv2:scalePoint [ rdfs:label "3k" ; rdf:value 3000 ] ;
+			lv2:scalePoint [ rdfs:label "4k" ; rdf:value 4000 ] ;
+			lv2:scalePoint [ rdfs:label "5k" ; rdf:value 5000 ] ;
+			lv2:scalePoint [ rdfs:label "6k" ; rdf:value 6000 ] ;
+			lv2:scalePoint [ rdfs:label "8k" ; rdf:value 8000 ] ;
+			lv2:scalePoint [ rdfs:label "10k" ; rdf:value 10000 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 21 ;
+			lv2:symbol "ssl_hmf_gain" ;
+			lv2:name "HMF Gain" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum -15 ;
+			lv2:maximum 15 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 22 ;
+			lv2:symbol "ssl_hf_freq" ;
+			lv2:name "HF Freq" ;
+			lv2:group <trowel#console> ;
+			lv2:default 10000 ;
+			lv2:minimum 3000 ;
+			lv2:maximum 16000 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "3k" ; rdf:value 3000 ] ;
+			lv2:scalePoint [ rdfs:label "4k" ; rdf:value 4000 ] ;
+			lv2:scalePoint [ rdfs:label "5k" ; rdf:value 5000 ] ;
+			lv2:scalePoint [ rdfs:label "6k" ; rdf:value 6000 ] ;
+			lv2:scalePoint [ rdfs:label "8k" ; rdf:value 8000 ] ;
+			lv2:scalePoint [ rdfs:label "10k" ; rdf:value 10000 ] ;
+			lv2:scalePoint [ rdfs:label "12k" ; rdf:value 12000 ] ;
+			lv2:scalePoint [ rdfs:label "16k" ; rdf:value 16000 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 23 ;
+			lv2:symbol "ssl_hf_gain" ;
+			lv2:name "HF Gain" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum -15 ;
+			lv2:maximum 15 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 24 ;
+			lv2:symbol "ssl_hf_bell" ;
+			lv2:name "HF Shape" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 25 ;
+			lv2:symbol "ssl_hpf" ;
+			lv2:name "HPF" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 160 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "OFF" ; rdf:value 0 ] ;
+			lv2:scalePoint [ rdfs:label "30" ; rdf:value 30 ] ;
+			lv2:scalePoint [ rdfs:label "50" ; rdf:value 50 ] ;
+			lv2:scalePoint [ rdfs:label "80" ; rdf:value 80 ] ;
+			lv2:scalePoint [ rdfs:label "120" ; rdf:value 120 ] ;
+			lv2:scalePoint [ rdfs:label "160" ; rdf:value 160 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 26 ;
+			lv2:symbol "ssl_lpf" ;
+			lv2:name "LPF" ;
+			lv2:group <trowel#console> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 20000 ;
+			units:unit units:hz ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "OFF" ; rdf:value 0 ] ;
+			lv2:scalePoint [ rdfs:label "8k" ; rdf:value 8000 ] ;
+			lv2:scalePoint [ rdfs:label "10k" ; rdf:value 10000 ] ;
+			lv2:scalePoint [ rdfs:label "12k" ; rdf:value 12000 ] ;
+			lv2:scalePoint [ rdfs:label "16k" ; rdf:value 16000 ] ;
+			lv2:scalePoint [ rdfs:label "20k" ; rdf:value 20000 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 27 ;
+			lv2:symbol "tame_on" ;
+			lv2:name "Tame" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 1 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 28 ;
+			lv2:symbol "tame_amount" ;
+			lv2:name "Amount" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 100 ;
+			units:unit units:pc ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 29 ;
+			lv2:symbol "tame_focus" ;
+			lv2:name "Focus" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 50 ;
+			lv2:minimum 0 ;
+			lv2:maximum 100 ;
+			units:unit units:pc ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 30 ;
+			lv2:symbol "tame_selectivity" ;
+			lv2:name "Selectivity" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 50 ;
+			lv2:minimum 0 ;
+			lv2:maximum 100 ;
+			units:unit units:pc ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 31 ;
+			lv2:symbol "tame_sensitivity" ;
+			lv2:name "Sensitivity" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 50 ;
+			lv2:minimum 0 ;
+			lv2:maximum 100 ;
+			units:unit units:pc ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 32 ;
+			lv2:symbol "tame_attack" ;
+			lv2:name "Attack" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 10 ;
+			lv2:minimum 1 ;
+			lv2:maximum 100 ;
+			units:unit units:ms ;
+			lv2:portProperty lv2:logarithmic ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 33 ;
+			lv2:symbol "tame_release" ;
+			lv2:name "Release" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 250 ;
+			lv2:minimum 50 ;
+			lv2:maximum 2000 ;
+			units:unit units:ms ;
+			lv2:portProperty lv2:logarithmic ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 34 ;
+			lv2:symbol "tame_mix" ;
+			lv2:name "Mix" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 100 ;
+			lv2:minimum 0 ;
+			lv2:maximum 100 ;
+			units:unit units:pc ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 35 ;
+			lv2:symbol "tame_listen" ;
+			lv2:name "Listen" ;
+			lv2:group <trowel#tame> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 36 ;
+			lv2:symbol "input_gain" ;
+			lv2:name "Input" ;
+			lv2:group <trowel#global> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 24 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 37 ;
+			lv2:symbol "output_gain" ;
+			lv2:name "Output" ;
+			lv2:group <trowel#global> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 24 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 38 ;
+			lv2:symbol "routing" ;
+			lv2:name "Routing" ;
+			lv2:group <trowel#global> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 5 ;
+			lv2:portProperty lv2:enumeration ;
+			lv2:scalePoint [ rdfs:label "COLOUR > CONSOLE > TAME" ; rdf:value 0 ] ;
+			lv2:scalePoint [ rdfs:label "COLOUR > TAME > CONSOLE" ; rdf:value 1 ] ;
+			lv2:scalePoint [ rdfs:label "CONSOLE > COLOUR > TAME" ; rdf:value 2 ] ;
+			lv2:scalePoint [ rdfs:label "CONSOLE > TAME > COLOUR" ; rdf:value 3 ] ;
+			lv2:scalePoint [ rdfs:label "TAME > COLOUR > CONSOLE" ; rdf:value 4 ] ;
+			lv2:scalePoint [ rdfs:label "TAME > CONSOLE > COLOUR" ; rdf:value 5 ] ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:InputPort ;
+			lv2:index 39 ;
+			lv2:symbol "enable" ;
+			lv2:name "Enabled" ;
+			lv2:group <trowel#global> ;
+			lv2:default 1 ;
+			lv2:minimum 0 ;
+			lv2:maximum 1 ;
+			lv2:portProperty lv2:toggled ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 40 ;
+			lv2:symbol "meter_gr" ;
+			lv2:name "Tame Reduction" ;
+			lv2:group <trowel#global> ;
+			lv2:default 0 ;
+			lv2:minimum -60 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 41 ;
+			lv2:symbol "meter_out" ;
+			lv2:name "Output Level" ;
+			lv2:group <trowel#global> ;
+			lv2:default -60 ;
+			lv2:minimum -60 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 42 ;
+			lv2:symbol "latency" ;
+			lv2:name "Latency" ;
+			lv2:group <trowel#global> ;
+			lv2:default 0 ;
+			lv2:minimum 0 ;
+			lv2:maximum 100000 ;
+			lv2:portProperty lv2:reportsLatency ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 43 ;
+			lv2:symbol "spectrum_1" ;
+			lv2:name "Spectrum 1" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 44 ;
+			lv2:symbol "spectrum_2" ;
+			lv2:name "Spectrum 2" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 45 ;
+			lv2:symbol "spectrum_3" ;
+			lv2:name "Spectrum 3" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 46 ;
+			lv2:symbol "spectrum_4" ;
+			lv2:name "Spectrum 4" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 47 ;
+			lv2:symbol "spectrum_5" ;
+			lv2:name "Spectrum 5" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 48 ;
+			lv2:symbol "spectrum_6" ;
+			lv2:name "Spectrum 6" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 49 ;
+			lv2:symbol "spectrum_7" ;
+			lv2:name "Spectrum 7" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 50 ;
+			lv2:symbol "spectrum_8" ;
+			lv2:name "Spectrum 8" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 51 ;
+			lv2:symbol "spectrum_9" ;
+			lv2:name "Spectrum 9" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 52 ;
+			lv2:symbol "spectrum_10" ;
+			lv2:name "Spectrum 10" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 53 ;
+			lv2:symbol "spectrum_11" ;
+			lv2:name "Spectrum 11" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 54 ;
+			lv2:symbol "spectrum_12" ;
+			lv2:name "Spectrum 12" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 55 ;
+			lv2:symbol "spectrum_13" ;
+			lv2:name "Spectrum 13" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 56 ;
+			lv2:symbol "spectrum_14" ;
+			lv2:name "Spectrum 14" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 57 ;
+			lv2:symbol "spectrum_15" ;
+			lv2:name "Spectrum 15" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 58 ;
+			lv2:symbol "spectrum_16" ;
+			lv2:name "Spectrum 16" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 59 ;
+			lv2:symbol "spectrum_17" ;
+			lv2:name "Spectrum 17" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 60 ;
+			lv2:symbol "spectrum_18" ;
+			lv2:name "Spectrum 18" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 61 ;
+			lv2:symbol "spectrum_19" ;
+			lv2:name "Spectrum 19" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 62 ;
+			lv2:symbol "spectrum_20" ;
+			lv2:name "Spectrum 20" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 63 ;
+			lv2:symbol "spectrum_21" ;
+			lv2:name "Spectrum 21" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 64 ;
+			lv2:symbol "spectrum_22" ;
+			lv2:name "Spectrum 22" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 65 ;
+			lv2:symbol "spectrum_23" ;
+			lv2:name "Spectrum 23" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 66 ;
+			lv2:symbol "spectrum_24" ;
+			lv2:name "Spectrum 24" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 67 ;
+			lv2:symbol "spectrum_25" ;
+			lv2:name "Spectrum 25" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 68 ;
+			lv2:symbol "spectrum_26" ;
+			lv2:name "Spectrum 26" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 69 ;
+			lv2:symbol "spectrum_27" ;
+			lv2:name "Spectrum 27" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 70 ;
+			lv2:symbol "spectrum_28" ;
+			lv2:name "Spectrum 28" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 71 ;
+			lv2:symbol "spectrum_29" ;
+			lv2:name "Spectrum 29" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 72 ;
+			lv2:symbol "spectrum_30" ;
+			lv2:name "Spectrum 30" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 73 ;
+			lv2:symbol "spectrum_31" ;
+			lv2:name "Spectrum 31" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 74 ;
+			lv2:symbol "spectrum_32" ;
+			lv2:name "Spectrum 32" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default -100 ;
+			lv2:minimum -100 ;
+			lv2:maximum 6 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 75 ;
+			lv2:symbol "gain_1" ;
+			lv2:name "Tame Gain 1" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 76 ;
+			lv2:symbol "gain_2" ;
+			lv2:name "Tame Gain 2" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 77 ;
+			lv2:symbol "gain_3" ;
+			lv2:name "Tame Gain 3" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 78 ;
+			lv2:symbol "gain_4" ;
+			lv2:name "Tame Gain 4" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 79 ;
+			lv2:symbol "gain_5" ;
+			lv2:name "Tame Gain 5" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 80 ;
+			lv2:symbol "gain_6" ;
+			lv2:name "Tame Gain 6" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 81 ;
+			lv2:symbol "gain_7" ;
+			lv2:name "Tame Gain 7" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 82 ;
+			lv2:symbol "gain_8" ;
+			lv2:name "Tame Gain 8" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 83 ;
+			lv2:symbol "gain_9" ;
+			lv2:name "Tame Gain 9" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 84 ;
+			lv2:symbol "gain_10" ;
+			lv2:name "Tame Gain 10" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 85 ;
+			lv2:symbol "gain_11" ;
+			lv2:name "Tame Gain 11" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 86 ;
+			lv2:symbol "gain_12" ;
+			lv2:name "Tame Gain 12" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 87 ;
+			lv2:symbol "gain_13" ;
+			lv2:name "Tame Gain 13" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 88 ;
+			lv2:symbol "gain_14" ;
+			lv2:name "Tame Gain 14" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 89 ;
+			lv2:symbol "gain_15" ;
+			lv2:name "Tame Gain 15" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 90 ;
+			lv2:symbol "gain_16" ;
+			lv2:name "Tame Gain 16" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 91 ;
+			lv2:symbol "gain_17" ;
+			lv2:name "Tame Gain 17" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 92 ;
+			lv2:symbol "gain_18" ;
+			lv2:name "Tame Gain 18" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 93 ;
+			lv2:symbol "gain_19" ;
+			lv2:name "Tame Gain 19" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 94 ;
+			lv2:symbol "gain_20" ;
+			lv2:name "Tame Gain 20" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 95 ;
+			lv2:symbol "gain_21" ;
+			lv2:name "Tame Gain 21" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 96 ;
+			lv2:symbol "gain_22" ;
+			lv2:name "Tame Gain 22" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 97 ;
+			lv2:symbol "gain_23" ;
+			lv2:name "Tame Gain 23" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 98 ;
+			lv2:symbol "gain_24" ;
+			lv2:name "Tame Gain 24" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 99 ;
+			lv2:symbol "gain_25" ;
+			lv2:name "Tame Gain 25" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 100 ;
+			lv2:symbol "gain_26" ;
+			lv2:name "Tame Gain 26" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 101 ;
+			lv2:symbol "gain_27" ;
+			lv2:name "Tame Gain 27" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 102 ;
+			lv2:symbol "gain_28" ;
+			lv2:name "Tame Gain 28" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 103 ;
+			lv2:symbol "gain_29" ;
+			lv2:name "Tame Gain 29" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 104 ;
+			lv2:symbol "gain_30" ;
+			lv2:name "Tame Gain 30" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 105 ;
+			lv2:symbol "gain_31" ;
+			lv2:name "Tame Gain 31" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] ;
+		lv2:port [
+			a lv2:ControlPort , lv2:OutputPort ;
+			lv2:index 106 ;
+			lv2:symbol "gain_32" ;
+			lv2:name "Tame Gain 32" ;
+			lv2:group <trowel#telemetry> ;
+			lv2:default 0 ;
+			lv2:minimum -24 ;
+			lv2:maximum 0 ;
+			units:unit units:db ;
+			lv2:portProperty pprops:notOnGUI ;
+			] .
+
+<trowel#input> a pg:Group ;
+	lv2:symbol "input" ;
+	lv2:name "Input" .
+
+<trowel#output> a pg:Group ;
+	lv2:symbol "output" ;
+	lv2:name "Output" .
+
+<trowel#colour> a pg:Group ;
+	lv2:symbol "colour" ;
+	lv2:name "Colour" .
+
+<trowel#console> a pg:Group ;
+	lv2:symbol "console" ;
+	lv2:name "Console" .
+
+<trowel#tame> a pg:Group ;
+	lv2:symbol "tame" ;
+	lv2:name "Tame" .
+
+<trowel#global> a pg:Group ;
+	lv2:symbol "global" ;
+	lv2:name "Global" .
+
+<trowel#telemetry> a pg:Group ;
+	lv2:symbol "telemetry" ;
+	lv2:name "Telemetry" .

@@ -1,0 +1,37 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
+@prefix opts: <http://lv2plug.in/ns/ext/options#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+
+<https://github.com/tylorismusic-commits/trowel-master>
+	a lv2:Plugin ;
+	lv2:binary <trowel-master.so> ;
+	rdfs:seeAlso <trowel-master.ttl> ;
+	ui:ui <https://github.com/tylorismusic-commits/trowel-master#ui> .
+
+<https://github.com/tylorismusic-commits/trowel-master#ui>
+	a ui:X11UI ;
+	ui:binary <trowelMasterUI.so> ;
+	lv2:requiredFeature ui:idleInterface , ui:parent ;
+	lv2:optionalFeature ui:resize , opts:options ;
+	lv2:extensionData ui:idleInterface , ui:resize ;
+	opts:supportedOption ui:scaleFactor ;
+	rdfs:seeAlso <trowel-master.ttl> .
+
+<https://github.com/tylorismusic-commits/trowel-master#preset_vocal> a pset:Preset ;
+	lv2:appliesTo <https://github.com/tylorismusic-commits/trowel-master> ;
+	rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/tylorismusic-commits/trowel-master#preset_drum_bus> a pset:Preset ;
+	lv2:appliesTo <https://github.com/tylorismusic-commits/trowel-master> ;
+	rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/tylorismusic-commits/trowel-master#preset_mix_bus> a pset:Preset ;
+	lv2:appliesTo <https://github.com/tylorismusic-commits/trowel-master> ;
+	rdfs:seeAlso <presets.ttl> .
+
+<https://github.com/tylorismusic-commits/trowel-master#preset_broken> a pset:Preset ;
+	lv2:appliesTo <https://github.com/tylorismusic-commits/trowel-master> ;
+	rdfs:seeAlso <presets.ttl> .
+

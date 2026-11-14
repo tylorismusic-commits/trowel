@@ -1,0 +1,9 @@
+build/
+*.o
+*.a
+*.so
+*.clap
+compile_commands.json
+.cache/
+*.swp
+*~
